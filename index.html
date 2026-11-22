@@ -268,8 +268,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
 /* ---------- Video ---------- */
 .video-sec{background:radial-gradient(1200px 500px at 80% 0%,rgba(31,79,224,.35),transparent 60%),var(--ink);color:#fff}
-.theater{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;align-items:stretch}
-.screen{position:relative;border-radius:22px;overflow:hidden;background:#000;aspect-ratio:16/9;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -30px rgba(31,79,224,.6)}
+.theater{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:24px;align-items:start}
+.screen{position:relative;width:100%;align-self:start;border-radius:22px;overflow:hidden;background:#000;aspect-ratio:16/9;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -30px rgba(31,79,224,.6)}
 .screen video{width:100%;height:100%;object-fit:cover;display:block}
 .screen-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;background:linear-gradient(0deg,rgba(10,12,18,.92) 0%,rgba(10,12,18,.1) 60%);transition:opacity .3s}
 .screen.playing .screen-overlay{opacity:0;pointer-events:none}
@@ -658,7 +658,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
     <div class="theater reveal">
       <div class="screen" id="screen">
-        <video id="mainVideo" playsinline preload="none" controls></video>
+        <video id="mainVideo" playsinline preload="none"></video>
         <div class="screen-overlay">
           <span class="live-tag"><i></i>ADR TV</span>
           <button class="play-big" id="playBig" aria-label="Reproducir video"><svg><use href="#i-play"/></svg></button>
@@ -1301,10 +1301,11 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     $("videoDesc").textContent = META[i].desc;
     items.forEach((it, k) => it.setAttribute("aria-current", k === i));
     screen.classList.remove("playing");
+    video.controls = false;
     if (autoplay) { video.play().catch(() => {}); }
   }
   $("playBig").addEventListener("click", () => video.play().catch(() => {}));
-  video.addEventListener("play", () => screen.classList.add("playing"));
+  video.addEventListener("play", () => { screen.classList.add("playing"); video.controls = true; });
   video.addEventListener("pause", () => { if (!video.seeking) screen.classList.remove("playing"); });
   video.addEventListener("ended", () => screen.classList.remove("playing"));
   load(0, false);
